@@ -22,16 +22,18 @@ const name = pubSubMessage.data ? Buffer.from(pubSubMessage.data, 'base64').toSt
 console.log(`My Cloud Function: ${name}`);
 };
 
+gsutil mb -p ${PROJECT_ID} gs://${BUCKET_NAME}
+
 gcloud services disable cloudfunctions.googleapis.com
 
 gcloud services enable cloudfunctions.googleapis.com
 
-gcloud projects add-iam-policy-binding [PROJECT_ID] \
---member="serviceAccount:[PROJECT_ID]@appspot.gserviceaccount.com" \
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+--member="serviceAccount:${PROJECT_ID}@appspot.gserviceaccount.com" \
 --role="roles/artifactregistry.reader"
 
 gcloud functions deploy helloWorld \
-  --stage-bucket [BUCKET_NAME] \
+  --stage-bucket ${BUCKET_NAME} \
   --trigger-topic hello_world \
   --runtime nodejs20
 
