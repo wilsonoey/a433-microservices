@@ -1,4 +1,8 @@
-export ZONE=us-central1-a
+export ZONE=us-west1-c
+
+export REGION=us-west1
+
+gcloud config set compute/region ${REGION}
 
 gcloud config set compute/zone ${ZONE}
 
