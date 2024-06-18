@@ -7,7 +7,7 @@ mkdir gcf_hello_world
 
 cd gcf_hello_world
 
-cat > index.js <<EOF_END
+cat <<EOF_END > index.js 
 /**
 * Background Cloud Function to be triggered by Pub/Sub.
 * This function is exported by index.js, and executed when
