@@ -1,7 +1,13 @@
-#!/bin/sh
-# build image menggunakan tag item-app:v1
-docker build . -t item-app:v1
-# menampilkan daftar image
-docker image ls
-# membuat tag baru dari item-app:v1 ghcr.io/berviantoleo/a433-microservices:v1
-docker tag item-app:v1 ghcr.io/wilsonoey60/a433-microservices:v1
+git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+
+cd python-docs-samples/appengine/standard_python3/hello_world
+
+dev_appserver.py app.yaml
+
+cd python-docs-samples/appengine/standard_python3/hello_world
+
+nano main.py
+
+gcloud app deploy
+
+gcloud app browse
