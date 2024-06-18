@@ -7,7 +7,7 @@ mkdir gcf_hello_world
 
 cd gcf_hello_world
 
-cat > index.js <<EOF_CP
+cat > index.js <<EOF_END
 /**
 * Background Cloud Function to be triggered by Pub/Sub.
 * This function is exported by index.js, and executed when
@@ -21,7 +21,7 @@ const pubSubMessage = data;
 const name = pubSubMessage.data ? Buffer.from(pubSubMessage.data, 'base64').toString() : "Hello World";
 console.log(`My Cloud Function: ${name}`);
 };
-EOF_CP
+EOF_END
 
 gsutil mb -p ${PROJECT_ID} gs://${BUCKET_NAME}
 
