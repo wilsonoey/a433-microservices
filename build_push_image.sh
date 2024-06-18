@@ -21,6 +21,7 @@ const pubSubMessage = data;
 const name = pubSubMessage.data ? Buffer.from(pubSubMessage.data, 'base64').toString() : "Hello World";
 console.log(`My Cloud Function: ${name}`);
 };
+EOF_CP
 
 gsutil mb -p ${PROJECT_ID} gs://${BUCKET_NAME}
 
