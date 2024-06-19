@@ -1,5 +1,6 @@
 export ZONE=us-east4-b
-export REGION=${ZONE::-2}
+export REGION=us-east4
+
 gcloud dataproc clusters create example-cluster \
 --region=$REGION \
 --zone=$ZONE \
@@ -8,12 +9,14 @@ gcloud dataproc clusters create example-cluster \
 --num-workers=2 \
 --worker-machine-type=e2-standard-2 \
 --worker-boot-disk-size=50GB
+
 gcloud dataproc jobs submit spark \
 --region=$REGION \
 --cluster=example-cluster \
 --class=org.apache.spark.examples.SparkPi \
 --jars=file:///usr/lib/spark/examples/jars/spark-examples.jar \
 -- 1000
+
 gcloud dataproc clusters update example-cluster \
 --num-workers=4 \
 --region=$REGION
