@@ -1,21 +1,40 @@
+export PROJECT_ID=qwiklabs-gcp-02-a4f0c744876d
+
+export BUCKET_NAME=$PROJECT_ID
+
+gcloud auth list
+
+gcloud config list project
+
+gcloud config set compute/region us-east4
+
 gcloud services disable dataflow.googleapis.com
+
 gcloud services enable dataflow.googleapis.com
-bq mk taxirides
-bq mk \
---time_partitioning_field timestamp \
---schema ride_id:string,point_idx:integer,latitude:float,longitude:float,\
-timestamp:timestamp,meter_reading:float,meter_increment:float,ride_status:string,\
-passenger_count:integer -t taxirides.realtime
+
+gcloud storage buckets create gs://$BUCKET_NAME --project=$PROJECT_ID --location=us
+
+docker run -it -e DEVSHELL_PROJECT_ID=$DEVSHELL_PROJECT_ID python:3.9 /bin/bash
 
 
-export BUCKET_NAME=$(gcloud config get-value project)
-gsutil mb gs://$BUCKET_NAME/
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-sleep 5m
 
-gcloud dataflow jobs run iotflow \
-    --gcs-location gs://dataflow-templates-us-central1/latest/PubSub_to_BigQuery \
-    --region us-central1 \
-    --worker-machine-type e2-medium \
-    --staging-location gs://$BUCKET_NAME/temp \
-    --parameters inputTopic=projects/pubsub-public-data/topics/taxirides-realtime,outputTableSpec=qwiklabs-gcp-01-a8e4883695c7:taxirides.realtime
+
+pip install 'apache-beam[gcp]'==2.42.0
+
+python -m apache_beam.examples.wordcount --output OUTPUT_FILE
+
+cat $(ls)
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+BUCKET=gs://<bucket name provided earlier>
+
+python -m apache_beam.examples.wordcount --project $DEVSHELL_PROJECT_ID \
+  --runner DataflowRunner \
+  --staging_location $BUCKET/staging \
+  --temp_location $BUCKET/temp \
+  --output $BUCKET/results/output \
+  --region us-central1
