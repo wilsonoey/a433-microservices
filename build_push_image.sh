@@ -10,3 +10,12 @@ passenger_count:integer -t taxirides.realtime
 
 export BUCKET_NAME=$(gcloud config get-value project)
 gsutil mb gs://$BUCKET_NAME/
+
+sleep 5m
+
+gcloud dataflow jobs run iotflow \
+    --gcs-location gs://dataflow-templates-us-central1/latest/PubSub_to_BigQuery \
+    --region "Region" \
+    --worker-machine-type e2-medium \
+    --staging-location gs://$BUCKET_NAME/temp \
+    --parameters inputTopic=projects/pubsub-public-data/topics/taxirides-realtime,outputTableSpec=qwiklabs-gcp-01-a8e4883695c7:taxirides.realtime
