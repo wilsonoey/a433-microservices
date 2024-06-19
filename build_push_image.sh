@@ -15,7 +15,7 @@ sleep 5m
 
 gcloud dataflow jobs run iotflow \
     --gcs-location gs://dataflow-templates-us-central1/latest/PubSub_to_BigQuery \
-    --region "Region" \
+    --region us-central1 \
     --worker-machine-type e2-medium \
     --staging-location gs://$BUCKET_NAME/temp \
     --parameters inputTopic=projects/pubsub-public-data/topics/taxirides-realtime,outputTableSpec=qwiklabs-gcp-01-a8e4883695c7:taxirides.realtime
