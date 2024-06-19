@@ -1,4 +1,4 @@
-export YOUR-BUCKET-NAME=
+export YOUR-BUCKET-NAME=fdbdbdbfdndfndfndn-vxcnxncndnd
 
 export REGION=us-central1
 
