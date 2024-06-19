@@ -1,4 +1,4 @@
-export YOUR-BUCKET-NAME=03-07a16eb737ad
+export YOUR-BUCKET-NAME=tyejmdtyhmyfmfjcmhjccgmdxmfhmfcgmdmhdmg
 
 export REGION=us-central1
 
