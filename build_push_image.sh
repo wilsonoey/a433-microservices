@@ -1,19 +1,25 @@
-export ZONE=us-west1-c
+export YOUR-BUCKET-NAME=03-07a16eb737ad
 
-export REGION=us-west1
+export REGION=us-central1
 
-gcloud config set compute/region ${REGION}
+gsutil mb gs://${YOUR-BUCKET-NAME}
 
-gcloud config set compute/zone ${ZONE}
+curl https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Ada_Lovelace_portrait.jpg/800px-Ada_Lovelace_portrait.jpg --output ada.jpg
 
-gcloud container clusters create --machine-type=e2-medium --zone=${ZONE} lab-cluster
+gsutil cp ada.jpg gs://${YOUR-BUCKET-NAME}
 
-gcloud container clusters get-credentials lab-cluster
+rm ada.jpg
 
-kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:1.0
+gsutil cp -r gs://${YOUR-BUCKET-NAME}/ada.jpg .
 
-kubectl expose deployment hello-server --type=LoadBalancer --port 8080
+gsutil cp gs://${YOUR-BUCKET-NAME}/ada.jpg gs://${YOUR-BUCKET-NAME}/image-folder/
 
-sleep 70
+gsutil ls gs://${YOUR-BUCKET-NAME}
 
-gcloud container clusters delete lab-cluster
+gsutil ls -l gs://${YOUR-BUCKET-NAME}/ada.jpg
+
+gsutil acl ch -u AllUsers:R gs://${YOUR-BUCKET-NAME}/ada.jpg
+
+gsutil acl ch -d AllUsers gs://${YOUR-BUCKET-NAME}/ada.jpg
+
+gsutil rm gs://${YOUR-BUCKET-NAME}/ada.jpg
