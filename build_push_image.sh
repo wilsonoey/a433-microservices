@@ -8,10 +8,6 @@ gcloud config list project
 
 gcloud config set compute/region us-east4
 
-gcloud services disable dataflow.googleapis.com
-
-gcloud services enable dataflow.googleapis.com
-
 gcloud storage buckets create gs://qwiklabs-gcp-02-a4f0c744876d-bucket --project=$PROJECT_ID --location=us
 
 docker run -it -e DEVSHELL_PROJECT_ID=$DEVSHELL_PROJECT_ID python:3.9 /bin/bash
