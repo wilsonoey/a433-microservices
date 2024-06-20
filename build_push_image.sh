@@ -1,12 +1,5 @@
-gcloud services enable appengineflex.googleapis.com
-gsutil cp gs://spls/gsp499/user-authentication-with-iap.zip .
-unzip user-authentication-with-iap.zip
-cd user-authentication-with-iap
-cd 1-HelloWorld
-gcloud app deploy
-cd ~/user-authentication-with-iap/2-HelloUser
-gcloud app deploy
 cd ~/user-authentication-with-iap/3-HelloVerifiedUser
+sed -i 's/python37/python39/g' app.yaml
 gcloud app deploy
 LINK=$(gcloud app browse)
 LINKU=${LINK#https://}
