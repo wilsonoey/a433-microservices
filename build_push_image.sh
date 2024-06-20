@@ -1,6 +1,8 @@
 export ZONE=us-east4-b
 export REGION=us-east4
 
+gcloud config set project qwiklabs-gcp-00-8869f7b1bdf6
+
 gcloud dataproc clusters create example-cluster \
   --region=$REGION \
   --zone=$ZONE \
