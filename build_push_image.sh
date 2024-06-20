@@ -1,7 +1,8 @@
-gcloud config set dataproc/region $REGION
-gcloud dataproc clusters create example-cluster --worker-boot-disk-size 500
-gcloud dataproc jobs submit spark \
---cluster example-cluster \
---class org.apache.spark.examples.SparkPi \
---jars file:///usr/lib/spark/examples/jars/spark-examples.jar \
--- 1000
+sudo apt-get install -y virtualenv
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade google-cloud-pubsub
+git clone https://github.com/googleapis/python-pubsub.git
+cd python-pubsub/samples/snippets
+python publisher.py $GOOGLE_CLOUD_PROJECT create MyTopic
+python subscriber.py $GOOGLE_CLOUD_PROJECT create MyTopic MySub
