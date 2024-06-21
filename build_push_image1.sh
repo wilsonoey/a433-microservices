@@ -1,10 +1,10 @@
-export IAP_NETWORK_TAG=allow-ssh-iap-ingress-ql-819
+export IAP_NETWORK_TAG=grant-ssh-iap-ingress-ql-842
 
-export INTERNAL_NETWORK_TAG=allow-ssh-internal-ingress-ql-819
+export INTERNAL_NETWORK_TAG=grant-ssh-internal-ingress-ql-842
 
-export HTTP_NETWORK_TAG=allow-http-ingress-ql-819
+export HTTP_NETWORK_TAG=grant-http-ingress-ql-842
 
-export ZONE=us-west1-c
+export ZONE=us-east4-c
 
 
 gcloud compute firewall-rules delete open-access
