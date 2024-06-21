@@ -2,12 +2,13 @@
 
 # Set variables
 PROJECT_ID=$(gcloud config get-value project)
-REGION="us-central1"
-ZONE="us-central1-a"
+REGION="us-west1"
+ZONE="us-west1-c"
 BASTION_TAG="bastion"
 JUICE_SHOP_TAG="juice-shop"
 ACME_MGMT_SUBNET="10.128.0.0/9"
 INTERNAL_SSH_TAG="network-allow-ssh-internal-ingress-ql-819"
+HTTP_TAG="network-allow-http-ingress-ql-819"
 
 # Step 1: Remove overly permissive firewall rules
 echo "Removing overly permissive firewall rules..."
@@ -41,7 +42,7 @@ gcloud compute firewall-rules create allow-http-to-juice-shop \
     --action=ALLOW \
     --rules=tcp:80 \
     --source-ranges="0.0.0.0/0" \
-    --target-tags=$JUICE_SHOP_TAG
+    --target-tags=$HTTP_TAG
 
 # Step 5: Create a firewall rule for SSH from bastion to juice-shop
 echo "Creating firewall rule for SSH from bastion to juice-shop..."
@@ -57,7 +58,7 @@ echo "Assigning tags to instances..."
 gcloud compute instances add-tags $BASTION_INSTANCE --tags=$BASTION_TAG --zone=$ZONE
 
 JUICE_SHOP_INSTANCE=$(gcloud compute instances list --filter="tags.items:$JUICE_SHOP_TAG" --format="value(name)")
-gcloud compute instances add-tags $JUICE_SHOP_INSTANCE --tags=$JUICE_SHOP_TAG,$INTERNAL_SSH_TAG --zone=$ZONE
+gcloud compute instances add-tags $JUICE_SHOP_INSTANCE --tags=$JUICE_SHOP_TAG,$INTERNAL_SSH_TAG,$HTTP_TAG --zone=$ZONE
 
 # Verify the setup
 echo "Verifying the setup..."
