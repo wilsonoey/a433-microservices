@@ -1,34 +1,51 @@
-export ZONE=us-east1-c
+pip install google-cloud-logging
 
-gcloud config set compute/zone $ZONE
-export REGION=${ZONE%-*}
-gcloud beta container clusters create private-cluster \
-    --enable-private-nodes \
-    --master-ipv4-cidr 172.16.0.16/28 \
-    --enable-ip-alias \
-    --create-subnetwork ""
-gcloud compute instances create source-instance --zone=$ZONE --scopes 'https://www.googleapis.com/auth/cloud-platform'
-NAT_IAP_CLOUDHUSTLER=$(gcloud compute instances describe source-instance --zone=$ZONE | grep natIP | awk '{print $2}')
-gcloud container clusters update private-cluster \
-    --enable-master-authorized-networks \
-    --master-authorized-networks $NAT_IAP_CLOUDHUSTLER/32
-gcloud container clusters delete private-cluster --zone=$ZONE --quiet
-gcloud compute networks subnets create my-subnet \
-    --network default \
-    --range 10.0.4.0/22 \
-    --enable-private-ip-google-access \
-    --region=$REGION \
-    --secondary-range my-svc-range=10.0.32.0/20,my-pod-range=10.4.0.0/14
-gcloud beta container clusters create private-cluster2 \
-    --enable-private-nodes \
-    --enable-ip-alias \
-    --master-ipv4-cidr 172.16.0.32/28 \
-    --subnetwork my-subnet \
-    --services-secondary-range-name my-svc-range \
-    --cluster-secondary-range-name my-pod-range \
-    --zone=$ZONE
-NAT_IAP_Cloud=$(gcloud compute instances describe source-instance --zone=$ZONE | grep natIP | awk '{print $2}')
-gcloud container clusters update private-cluster2 \
-    --enable-master-authorized-networks \
-    --zone=$ZONE \
-    --master-authorized-networks $NAT_IAP_Cloud/32
+pip install ---upgrade protobuf
+
+pip install --upgrade tensorflow
+
+python --version
+
+python -c "import tensorflow;print(tensorflow.__version__)"
+
+# Create a new Python file named model.py
+cat << 'EOF' > model.py
+import logging
+import google.cloud.logging as cloud_logging
+from google.cloud.logging.handlers import CloudLoggingHandler
+from google.cloud.logging_v2.handlers import setup_logging
+
+# Set up cloud logging
+cloud_logger = logging.getLogger('cloudLogger')
+cloud_logger.setLevel(logging.INFO)
+cloud_logger.addHandler(CloudLoggingHandler(cloud_logging.Client()))
+cloud_logger.addHandler(logging.StreamHandler())
+
+# Import TensorFlow
+import tensorflow as tf
+
+# Import numpy
+import numpy as np
+
+# Prepare the data
+xs = np.array([-1.0, 0.0, 1.0, 2.0, 3.0, 4.0], dtype=float)
+ys = np.array([-2.0, 1.0, 4.0, 7.0, 10.0, 13.0], dtype=float)
+
+# Design the model
+model = tf.keras.Sequential([tf.keras.layers.Dense(units=1, input_shape=[1])])
+
+# Compile the model
+model.compile(optimizer=tf.keras.optimizers.SGD(), loss=tf.keras.losses.MeanSquaredError())
+
+# Train the model
+model.fit(xs, ys, epochs=500)
+
+# Use the model to predict
+cloud_logger.info(str(model.predict(np.array([10.0]))))
+EOF
+
+# Run the Python script
+python3 model.py
+
+# Note: This script assumes that you have python3 installed and configured correctly along with necessary packages.
+# If using a virtual environment, ensure it's activated before running this script.
