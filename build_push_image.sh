@@ -86,22 +86,16 @@ model.fit(ds_train, epochs=5)
 cloud_logger.info(model.evaluate(ds_test))
 
 # Save the entire model as a SavedModel
-model.save('saved_model')
+model.export('saved_model')
 
 # Reload a fresh Keras model from the saved model
-new_model = tf.keras.models.load_model('saved_model')
-
-# Summary of loaded SavedModel
-new_model.summary()
+new_model = tf.keras.layers.TFSMLayer('saved_model', call_endpoint="serving_default")
 
 # Save the entire model to a HDF5 file
-model.save('my_model.h5')
+model.export('my_model.h5')
 
 # Recreate the exact same model, including its weights and the optimizer
-new_model_h5 = tf.keras.models.load_model('my_model.h5')
-
-# Summary of loaded h5 model
-new_model_h5.summary()
+new_model_h5 = tf.keras.layers.TFSMLayer('my_model.h5', call_endpoint="serving_default")
 EOF
 
 # Run the script
