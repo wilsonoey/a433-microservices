@@ -137,10 +137,6 @@ model.fit(ds_train, epochs=5)
 model.summary(print_fn=up_logger.info)
 EOF
 
-# Run the script
-echo "Running the model script..."
-python updated_model.py
-
 # File yang akan diubah
 FILE="updated_model.py"
 
@@ -162,7 +158,3 @@ EOF
 for i in $(seq $START_LINE_1 $END_LINE_1); do
   sed -i "${i}s/.*/${NEW_TEXT_1}/" "$FILE"
 done
-
-# Run the script
-echo "Running the model script..."
-python updated_model.py
