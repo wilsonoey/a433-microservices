@@ -1,17 +1,17 @@
-gcloud auth list
+export PROJECT_ID=$DEVSHELL_PROJECT_ID
+export BUCKET=$PROJECT_ID
 
-gcloud config list project
+gsutil mb -p $PROJECT_ID \
+    -c standard    \
+    -l "REGION" \
+    gs://${BUCKET}
 
+gsutil -m cp -r gs://car_damage_lab_images/* gs://${BUCKET}
 
-export PROJECT_ID=$(gcloud config get-value core/project)
+gsutil cp gs://car_damage_lab_metadata/data.csv .
 
-gsutil mb gs://${PROJECT_ID}
+sed -i -e "s/car_damage_lab_images/${BUCKET}/g" ./data.csv
 
-gsutil -m cp gs://cloud-training/gsp897/cosmetic-test-data/*.png \
+cat ./data.csv
 
-gs://${PROJECT_ID}/cosmetic-test-data/
-
-
-gsutil ls gs://${PROJECT_ID}/cosmetic-test-data/*.png > /tmp/demo_cosmetic_images.csv
-
-gsutil cp /tmp/demo_cosmetic_images.csv gs://${PROJECT_ID}/demo_cosmetic_images.csv
+gsutil cp ./data.csv gs://${BUCKET}
