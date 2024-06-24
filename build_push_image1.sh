@@ -1,15 +1,17 @@
-gcloud services enable apikeys.googleapis.com
-export API_KEY=AIzaSyBRVaOyuAzDC56fJx2VnaBeCTY45uJPFDM
-touch request.json
-tee request.json <<EOF
-{
-  "document":{
-    "type":"PLAIN_TEXT",
-    "content":"Joanne Rowling, who writes under the pen names J. K. Rowling and Robert Galbraith, is a British novelist and screenwriter who wrote the Harry Potter fantasy series."
-  },
-  "encodingType":"UTF8"
-}
-EOF
-cat request.json
-curl "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}" -s -X POST -H "Content-Type: application/json" --data-binary @request.json > result.json
-cat result.json
+gcloud config set compute/zone $ZONE
+
+export PROJECT_ID=$(gcloud info --format='value(config.project)')
+
+gcloud container clusters get-credentials central --zone $ZONE
+
+git clone https://github.com/xiangshen-dk/microservices-demo.git
+
+cd microservices-demo
+
+kubectl apply -f release/kubernetes-manifests.yaml
+
+sleep 30
+
+gcloud logging metrics create Error_Rate_SLI \
+  --description="subscribe to quicklab" \
+  --log-filter="resource.type=\"k8s_container\" severity=ERROR labels.\"k8s-pod/app\": \"recommendationservice\"" 
