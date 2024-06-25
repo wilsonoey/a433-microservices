@@ -1,15 +1,32 @@
-export PROJECT_ID=$DEVSHELL_PROJECT_ID
-export BUCKET=$PROJECT_ID
-gcloud config set project $PROJECT_ID
+bq query --use_legacy_sql=false \
+'
+#standardSQL
+SELECT
+ weight_pounds, state, year, gestation_weeks
+FROM
+ `bigquery-public-data.samples.natality`
+ORDER BY weight_pounds DESC LIMIT 10;
+'
 
-gsutil mb -p $PROJECT_ID -c standard -l "REGION" gs://${BUCKET}
+bq mk babynames
 
-gsutil -m cp -r gs://car_damage_lab_images/* gs://${BUCKET}
+https://labshell-service-mvrcyiow4a-uc.a.run.app
 
-gsutil cp gs://car_damage_lab_metadata/data.csv .
+gsutil cp gs://spls/gsp072/baby-names.zip .
 
-sed -i -e "s/car_damage_lab_images/${BUCKET}/g" ./data.csv
+unzip baby-names.zip
 
-cat ./data.csv
+bq load --autodetect --source_format=CSV babynames.names_2014 gs://spls/gsp072/baby-names/yob2014.txt name:string,gender:string,count:integer
 
-gsutil cp ./data.csv gs://${BUCKET}
+
+bq query --use_legacy_sql=false \
+'
+#standardSQL
+SELECT
+ name, count
+FROM
+ `babynames.names_2014`
+WHERE
+ gender = "M"
+ORDER BY count DESC LIMIT 5;
+'
