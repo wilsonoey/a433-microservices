@@ -31,6 +31,9 @@ echo "Installing pylint..."
 echo "Upgrading TensorFlow..."
 pip install --upgrade tensorflow
 
+# Downgrade protobuf
+pip install protobuf==3.20.*
+
 # Task 2: Start Coding
 echo "Creating model.py and writing code for the model..."
 
